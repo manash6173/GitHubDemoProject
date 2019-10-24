@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-3.0.xsd">
+<!-- import resources -->
+<!-- configure reader classes -->
+<bean id="reader" class="com.manash.batch.process.CustomItemReader" >
+   <property name="bookName">
+      <list>
+         <value>Core Java</value>
+         <value>Spring</value>
+         <value>Rest</value>
+         <value>Python</value>
+         <value>Oracle</value>
+      </list>
+   </property>
+</bean>
+<!-- configure ItemProcessor class -->
+<bean id="process" class="com.manash.batch.process.CustomItemProcessor"/>
+<!-- configure ItemWriter -->
+<bean id="writer" class="com.manash.batch.process.CustomItemWriter"/>
+
+<!-- configure jobs  -->
+
+<batch:job id="mySimpleJob" job-repository="jobRepo" parent="simpleJob">
+    <batch:step id="step1">
+        <batch:tasklet transaction-manager="txMgmr">
+           <batch:chunk reader="reader" processor="process" writer="writer" commit-interval="1"/>
+        </batch:tasklet>
+    </batch:step>
+</batch:job>
+
+</beans>
